@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+   name: rotor-studio
+   labels: 
+      name: rotor-studio
+spec: 
+   replicas: 2
+   selector: 
+      matchLabels: 
+         name: rotor-studio
+   template: 
+      metadata:
+        name: rotr-studio
+        labels:
+           name: rotor-studio
+      spec:
+         containers: 
+            - name: rotor-studio
+              image: mukeshdreddy/demoimage_0911
+              ports: 
+                 - containerPort: 80
+              resources: 
+                 limits: 
+                   cpu: 500m
+                 requests: 
+                    cpu: 200m
+---
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+   name: rotor-studio
+   labels:
+      name: rotor-studio
+spec:
+   ports:
+     - port: 80
+   selector:
+     name: rotor-studio
+
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: rotor-studio
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: rotor-studio
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
+
+
+            
